@@ -6,29 +6,28 @@ from hsslib.htf import HTF
 
 
 class SogiPll(HSS):
-
     def setup(self):
         # States
-        xa, xb, xpll, xd = symbols('xa xb xpll xd')
+        xa, xb, xpll, xd = symbols("xa xb xpll xd")
         self.x = [xa, xb, xpll, xd]
         self.x0 = Matrix([cos(self.w0 * self.t), sin(self.w0 * self.t), 0, 0])
 
         # Inputs
-        up = symbols('up')
+        up = symbols("up")
         self.u = [up]
-        self.u0 = [0*self.t]
+        self.u0 = [0 * self.t]
 
         # Parameters
-        ksog, a_pll = symbols('ksog a_pll')
+        ksog, a_pll = symbols("ksog a_pll")
         self.p = [ksog, a_pll]
         self.p_value = [2, 110]
 
         # Fixed Parameters
-        ug = cos(self.w0*self.t+up)
+        ug = cos(self.w0 * self.t + up)
 
         # Algebraic equations
         kp = 2 * a_pll
-        ki = 2 * a_pll ** 2
+        ki = 2 * a_pll**2
         th_pll = xd + self.w0 * self.t
         uq = -sin(th_pll) * xa + cos(th_pll) * xb
         wpll = xpll + self.w0 + kp * uq
@@ -48,7 +47,7 @@ pll = SogiPll()
 pll.find_pss()
 pll.toep_BCD()
 
-freqs = np.linspace(10,110,601)
+freqs = np.linspace(10, 110, 601)
 Hpll = HTF(pll, freqs)
 midcol = Hpll.get_mid_col(tol=1e-10)
 midcol.plot()
